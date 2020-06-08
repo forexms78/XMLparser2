@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.InputStream;
 import java.io.StringReader;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,18 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?> \n";
-        xml = xml + "<students>\n";
-        xml = xml + "<student>\n" ;
-        xml = xml + " <name> 홍길동 </name> <age>34</age> <sex>남성</sex>\n";
-        xml = xml + "</student>\n";
-        xml = xml + "<student>\n" ;
-        xml = xml + " <name>  유관순 </name> <age>18</age> <sex>여성</sex>\n";
-        xml = xml + "</student>\n";
-        xml = xml + "<student>\n" ;
-        xml = xml + " <name>  박병호 </name> <age>24</age> <sex>남성</sex>\n";
-        xml = xml + "</student>\n";
-        xml = xml + "<students>\n" ;
+
 
         txt1 = (TextView) findViewById(R.id.text1);
         txt2 = (TextView) findViewById(R.id.text2);
@@ -52,12 +42,22 @@ public class MainActivity extends AppCompatActivity {
                     XmlPullParser parser;
                     fact = XmlPullParserFactory.newInstance();
                     parser = fact.newPullParser();
-                    parser.setInput(new StringReader(xml));
+                    InputStream is;
+                    is = getResources().openRawResource(R.raw.info);
+                    int n;
+                    byte[] bt = new byte[is.available()];
+                    n = is.read(bt);
+                    if ( n <= 0)
+                        return;
+                    String s = new String(bt);
+                    xml =s;
+                    txt1.setText(xml);
+                    parser.setInput(new StringReader(xml));                 //sd 카드에 읽은 때는 open file stream 으로 읽어낼 수 있다
 
                     int type;
-                    boolean bname = false, bsex = false;
+                    boolean bname = false, bsex = false, btel = false, bage = false;
                     String tag;
-                    res = "  이름     성별 \n";
+                    res = "  이름  나이   성별        전화번호   \n";
 
                     type = parser.getEventType();
                     while ( type != XmlPullParser.END_DOCUMENT){
@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
                                     bname = true;
                                 } else if ( tag.equals("sex")){
                                     bsex = true;
+                                } else if ( tag.equals("tel")){
+                                    btel = true;
+                                } else if ( tag.equals("age")){
+                                    bage = true;
                                 }
                                 break;
 
@@ -78,8 +82,14 @@ public class MainActivity extends AppCompatActivity {
                                     res = res + parser.getText() + "  ";
                                     bname = false;
                                 } else if(bsex){
-                                    res = res + parser.getText() + "\n";
+                                    res = res + parser.getText() + "  ";
                                     bsex = false;
+                                } else if (btel){
+                                    res = res + parser.getText() + "\n";
+                                    btel = false;
+                                }else if (bage){
+                                    res = res + parser.getText() + "  ";
+                                    bage = false;
                                 }
                                 break;
                             case XmlPullParser.END_TAG:

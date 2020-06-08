@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<students>
+<student>
+<name>홍길동</name> <age>35</age> <sex>남성</sex> <tel>111-1111</tel>
+<name>유관순</name> <age>18</age> <sex>여성</sex> <tel>222-2222</tel>
+<name>이순신</name> <age>58</age> <sex>남성</sex> <tel>333-3333</tel>
+<name>박병호</name> <age>24</age> <sex>남성</sex> <tel>444-4444</tel>
+</student>
+</students>
